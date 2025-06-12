@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">A6Group7</string>
+    <string name="groupNames">Group Members: \n Muno Ali \n  </string>
+    <string name="get_weather">Get Weather</string>
+</resources>
