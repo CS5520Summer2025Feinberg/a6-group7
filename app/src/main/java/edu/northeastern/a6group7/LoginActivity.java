@@ -3,47 +3,52 @@ package edu.northeastern.a6group7;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText usernameInput;
-    private Button loginButton;
+    EditText userInput;
+    Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Check if already logged in
-        SharedPreferences prefs = getSharedPreferences("StickerPrefs", MODE_PRIVATE);
-        if (prefs.contains("username")) {
-            // Already logged in, go to MainActivity
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        SharedPreferences sp = getSharedPreferences("AppData", MODE_PRIVATE);
+        String savedUser = sp.getString("username", "");
+
+        if (!savedUser.equals("")) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
             finish();
+            return;
         }
 
         setContentView(R.layout.activity_login);
 
-        usernameInput = findViewById(R.id.usernameInput);
-        loginButton = findViewById(R.id.loginButton);
+        userInput = findViewById(R.id.usernameInput);
+        btnLogin = findViewById(R.id.loginButton);
 
-        loginButton.setOnClickListener(v -> {
-            String username = usernameInput.getText().toString().trim();
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String user = userInput.getText().toString();
 
-            if (!username.isEmpty()) {
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("username", username);
-                editor.apply();
+                if (user.length() > 0) {
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("username", user);
+                    editor.commit();
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(this, "Please enter a username", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Enter username first", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
