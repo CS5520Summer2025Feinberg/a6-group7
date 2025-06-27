@@ -7,5 +7,7 @@
     <string name="weather_appear">Weather info will appear here</string>
     <string name="showFahrenheit">Show in Fahrenheit</string>
 
+    <string name="login">Login</string>
+
 
 </resources>
