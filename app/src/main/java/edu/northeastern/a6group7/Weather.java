@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +35,11 @@ public class Weather extends AppCompatActivity {
     private Runnable loadingRunnable; // for dot dot updates
     private int loadingDots = 0; // counter for dots displayed
     private final String LOADING_BASE_TEXT = "Loading weather data"; // The base text "Loading weather data"
+    private String iconUrl;
+    private Switch convertTemp;
+    private boolean showFahrenheit = false;
+    private Double celsiusTemp = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +50,17 @@ public class Weather extends AppCompatActivity {
         weatherResultText = findViewById(R.id.weatherResultText);
         weatherIcon = findViewById(R.id.weatherIcon);
         fetchWeatherButton = findViewById(R.id.fetchWeatherButton);
+        convertTemp = findViewById(R.id.toggleTemp);
+        convertTemp.setOnCheckedChangeListener(((buttonView, isChecked) ->{
 
+            showFahrenheit = isChecked;
+            if (celsiusTemp != null){
+                String condition = weatherResultText.getText().toString().split("\n")[2].replace("Condition: ", "");
+                String windSpeed = weatherResultText.getText().toString().split("\n")[3].replace("Wind Speed: ", "").replace("m/s", "");
+
+                updateWeatherDisplay(cityInput.getText().toString(), celsiusTemp, condition, windSpeed);
+            }
+    }));
         // added below for active indicator, initializing handler
         handler = new Handler(); // Initialize the Handler here
 
@@ -57,8 +73,35 @@ public class Weather extends AppCompatActivity {
                 weatherResultText.setText("Please enter a city name.");
             }
         });
-    }
 
+        if (savedInstanceState != null) {
+            String savedText = savedInstanceState.getString("savedWeatherText");
+            if (savedText != null){
+                weatherResultText.setText(savedText);
+            }
+            String savedIconUrl = savedInstanceState.getString("savedIconUrl");
+            if (savedIconUrl != null && !savedIconUrl.isEmpty()) {
+                Picasso.get().load(savedIconUrl).into(weatherIcon);
+                iconUrl = savedIconUrl;
+                weatherIcon.setVisibility(View.VISIBLE);
+            }
+            showFahrenheit = savedInstanceState.getBoolean("savedToggle");
+            convertTemp.setChecked(showFahrenheit);
+            convertTemp.setVisibility(View.VISIBLE);
+            celsiusTemp = savedInstanceState.getDouble("savedCelsiusTemp");
+
+        }
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("savedWeatherText", weatherResultText.getText().toString());
+        outState.putString("savedIconUrl", iconUrl);
+        outState.putBoolean("savedToggle", showFahrenheit);
+        if (celsiusTemp != null) {
+            outState.putDouble("savedCelsiusTemp", celsiusTemp);
+        }
+    }
     private void fetchWeather(String city) {
         // replacing redundant, static loading message below for after active loading indicator
         // weatherResultText.setText("Loading weather data...");
@@ -72,6 +115,9 @@ public class Weather extends AppCompatActivity {
                 URL url = new URL(apiUrl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
+                conn.setConnectTimeout(2000);
+                conn.setReadTimeout(2000);
+
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder result = new StringBuilder();
@@ -85,23 +131,21 @@ public class Weather extends AppCompatActivity {
                 JSONObject weather = jsonResponse.getJSONArray("weather").getJSONObject(0);
                 JSONObject wind = jsonResponse.getJSONObject("wind");
 
-                String temperature = main.getString("temp");
+                Double temperature = main.getDouble("temp");
                 String description = weather.getString("description");
                 String iconCode = weather.getString("icon");
                 String windSpeed = wind.getString("speed");
+                celsiusTemp = temperature;
 
-                String iconUrl = "https://openweathermap.org/img/wn/" + iconCode + "@2x.png";
+                iconUrl = "https://openweathermap.org/img/wn/" + iconCode + "@2x.png";
 
                 runOnUiThread(() -> {
                     loadingEnd(); // added to end loading animation
-                    weatherResultText.setText(
-                            "City: " + city + "\n" +
-                                    "Temperature: " + temperature + "°C\n" +
-                                    "Condition: " + description + "\n" +
-                                    "Wind Speed: " + windSpeed + " m/s"
-                    );
+//
+                    updateWeatherDisplay(city, temperature, description, windSpeed);
                     Picasso.get().load(iconUrl).into(weatherIcon);
                     weatherIcon.setVisibility(View.VISIBLE); // bring back weather icon
+                    convertTemp.setVisibility(View.VISIBLE); //bring back toggle
                 });
 
                 conn.disconnect();
@@ -142,5 +186,23 @@ public class Weather extends AppCompatActivity {
             handler.removeCallbacks(loadingRunnable);
             loadingRunnable = null;
         }
+    }
+
+    private void updateWeatherDisplay(String cityName, Double celsiusTemp, String description, String windSpeed ){
+        if (celsiusTemp == null) return;
+        String showTemp = showFahrenheit
+                ? String.format("%.1f°F", convertToFahrenheit(celsiusTemp))
+                : String.format("%.1f°C", celsiusTemp);
+
+        String display = "City: " + cityName + "\n" +
+                "Temperature: " + showTemp + "\n" +
+                "Condition: " + description + "\n" +
+                "Wind Speed: " + windSpeed + "m/s";
+
+        weatherResultText.setText(display);
+    }
+    // Celsius to Fahrenheit formula
+    private double convertToFahrenheit(double celsius) {
+        return (celsius * 9 / 5) + 32;
     }
 }
