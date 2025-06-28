@@ -15,7 +15,8 @@
         android:minHeight="48dp"
         android:textSize="16sp"
         android:layout_marginBottom="20dp"
-        android:autofillHints="username" />
+        android:autofillHints="username"
+        android:gravity="center" />
 
     <Button
         android:id="@+id/loginButton"
