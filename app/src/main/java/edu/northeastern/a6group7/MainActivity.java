@@ -49,5 +49,11 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference ref = db.getReference();
         ref.child("testNode").setValue("Hello Firebase");
+
+        Button viewStickersButton = findViewById(R.id.viewStickersButton);
+        viewStickersButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+            startActivity(intent);
+        });
     }
 }

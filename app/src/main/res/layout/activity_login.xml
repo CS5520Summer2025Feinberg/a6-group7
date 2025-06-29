@@ -2,21 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     android:padding="20dp">
 
     <EditText
         android:id="@+id/usernameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:autofillHints="username"
+        android:gravity="center"
         android:hint="Username"
         android:inputType="text"
         android:minHeight="48dp"
-        android:textSize="16sp"
-        android:layout_marginBottom="20dp"
-        android:autofillHints="username"
-        android:gravity="center" />
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/loginButton"
