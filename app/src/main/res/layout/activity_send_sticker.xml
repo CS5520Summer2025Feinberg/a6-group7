@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sendStickerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#FFFFFF">
+
+    <EditText
+        android:id="@+id/recipientInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Recipient Username"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:textSize="16sp"
+        android:autofillHints="username"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose a Sticker"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
+
+        <ImageView
+            android:id="@+id/stickerHeart"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/sticker_heart"
+            android:layout_margin="8dp"
+            android:contentDescription="Heart Sticker" />
+
+        <ImageView
+            android:id="@+id/stickerStar"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/sticker_star"
+            android:layout_margin="8dp"
+            android:contentDescription="Star Sticker" />
+
+        <ImageView
+            android:id="@+id/stickerFire"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/sticker_fire"
+            android:layout_margin="8dp"
+            android:contentDescription="Fire Sticker" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Sticker"
+        android:minHeight="48dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp" />
+
+</LinearLayout>
