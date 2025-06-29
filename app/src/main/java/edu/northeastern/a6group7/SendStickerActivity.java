@@ -98,14 +98,7 @@ public class SendStickerActivity extends AppCompatActivity {
         String currentTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(new Date());
         sticker = new Sticker(from, to, stickerId, currentTime);
 
-        receiverRef.child(key).setValue(sticker)
-                .addOnSuccessListener(result ->{
-                    Log.d("SendSticker", "Sticker saved successfully");
-                    Toast.makeText(SendStickerActivity.this, "Sticker saved to the database!", Toast.LENGTH_SHORT).show();})
-                .addOnFailureListener(e -> {
-                    Log.d("SendSticker", "Sticker not saved");
-                    Toast.makeText(SendStickerActivity.this, "Failed to send sticker", Toast.LENGTH_SHORT).show();
-        });
+        receiverRef.child(key).setValue(sticker);
 
         // Update sender’s sent count
         DatabaseReference senderRef = db.child(from).child("stickersSentCount");
@@ -119,12 +112,11 @@ public class SendStickerActivity extends AppCompatActivity {
 
         // Update received count
         DatabaseReference receivedCountRef = db.child(to).child("stickersReceivedCount");
-        senderRef.get().addOnSuccessListener(snapshot -> {
+        receivedCountRef.get().addOnSuccessListener(snapshot -> {
             long current = snapshot.exists() ? snapshot.getValue(Long.class) : 0;
             receivedCountRef.setValue(current + 1);
-            Toast.makeText(SendStickerActivity.this, "Sticker sent!", Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> {
-            Toast.makeText(SendStickerActivity.this, "Failed to send sticker", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SendStickerActivity.this, "Failed to update received count", Toast.LENGTH_SHORT).show();
         });
 
 
