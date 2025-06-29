@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">A6Group7</string>
     <string name="groupNames">Group Members:\n\nMuno Ali\nAbhilash Singh\nAlex Perkins\n</string>
-
+    <string name="aboutUs">About Us</string>
     <string name="get_weather">Get Weather</string>
     <string name="enter_city">Enter city (e.g. Seattle)</string>
     <string name="weather_appear">Weather info will appear here</string>

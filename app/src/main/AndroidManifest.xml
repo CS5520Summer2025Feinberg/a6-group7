@@ -9,28 +9,27 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.A6Group7">
-
+        <activity
+            android:name=".AboutUsActivity"
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
         <activity
             android:name=".Weather"
             android:exported="false" />
-
         <activity
             android:name=".SendStickerActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>

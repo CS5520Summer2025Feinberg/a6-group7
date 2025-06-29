@@ -2,6 +2,7 @@ package edu.northeastern.a6group7;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -24,6 +26,7 @@ public class SendStickerActivity extends AppCompatActivity {
     private Button sendButton;
     private String selectedSticker = "sticker_heart"; // default
     private String currentUser;
+    private Sticker sticker;
 
     private ImageView heartSticker, starSticker, fireSticker;
 
@@ -81,24 +84,49 @@ public class SendStickerActivity extends AppCompatActivity {
     }
 
     private void sendStickerToUser(String from, String to, String stickerId) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("stickers");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
 
         // Add to receiver's history
-        String key = db.child(to).child("received").push().getKey();
-        HashMap<String, Object> history = new HashMap<>();
-        history.put("from", from);
-        history.put("stickerId", stickerId);
-        history.put("timestamp", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(new Date()));
-        db.child(to).child("received").child(key).setValue(history);
+        DatabaseReference receiverRef = db.child(to).child("stickersReceived");
+        String key = receiverRef.push().getKey();
+        if (key == null) {
+            Log.e("SendSticker", "Failed to generate key for sticker");
+            return;
+        }
+
+        //create Sticker with current time
+        String currentTime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(new Date());
+        sticker = new Sticker(from, to, stickerId, currentTime);
+
+        receiverRef.child(key).setValue(sticker)
+                .addOnSuccessListener(result ->{
+                    Log.d("SendSticker", "Sticker saved successfully");
+                    Toast.makeText(SendStickerActivity.this, "Sticker saved to the database!", Toast.LENGTH_SHORT).show();})
+                .addOnFailureListener(e -> {
+                    Log.d("SendSticker", "Sticker not saved");
+                    Toast.makeText(SendStickerActivity.this, "Failed to send sticker", Toast.LENGTH_SHORT).show();
+        });
 
         // Update sender’s sent count
-        DatabaseReference sentRef = db.child(from).child("sent").child(stickerId);
-        sentRef.get().addOnSuccessListener(snapshot -> {
+        DatabaseReference senderRef = db.child(from).child("stickersSentCount");
+        senderRef.get().addOnSuccessListener(snapshot -> {
             long current = snapshot.exists() ? snapshot.getValue(Long.class) : 0;
-            sentRef.setValue(current + 1);
+            senderRef.setValue(current + 1);
             Toast.makeText(SendStickerActivity.this, "Sticker sent!", Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> {
             Toast.makeText(SendStickerActivity.this, "Failed to send sticker", Toast.LENGTH_SHORT).show();
         });
+
+        // Update received count
+        DatabaseReference receivedCountRef = db.child(to).child("stickersReceivedCount");
+        senderRef.get().addOnSuccessListener(snapshot -> {
+            long current = snapshot.exists() ? snapshot.getValue(Long.class) : 0;
+            receivedCountRef.setValue(current + 1);
+            Toast.makeText(SendStickerActivity.this, "Sticker sent!", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(SendStickerActivity.this, "Failed to send sticker", Toast.LENGTH_SHORT).show();
+        });
+
+
     }
 }

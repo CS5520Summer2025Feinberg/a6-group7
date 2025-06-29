@@ -27,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        Button aboutUs = findViewById(R.id.aboutUs);
+        aboutUs.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, AboutUsActivity.class);
+            startActivity(intent);
+        });
+
         Button weatherBtn = findViewById(R.id.getWeather);
         weatherBtn.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, Weather.class);
