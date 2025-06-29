@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "970766825995",
+    "firebase_url": "https://a6group7-default-rtdb.firebaseio.com",
+    "project_id": "a6group7",
+    "storage_bucket": "a6group7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970766825995:android:a075ac15851bc9dc2ca50e",
+        "android_client_info": {
+          "package_name": "edu.northeastern.a6group7"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZlS5zyQ4FQLdrhk29erUtkXIij7BA3fU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
