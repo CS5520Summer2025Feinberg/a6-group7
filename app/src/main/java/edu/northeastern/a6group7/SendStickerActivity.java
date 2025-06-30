@@ -1,5 +1,6 @@
 package edu.northeastern.a6group7;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -72,6 +73,13 @@ public class SendStickerActivity extends AppCompatActivity {
 
                 sendStickerToUser(currentUser, recipient, selectedSticker);
             }
+        });
+
+        //history section
+        Button showStickerHistory = findViewById(R.id.showHistory);
+        showStickerHistory.setOnClickListener(view -> {
+            Intent intent = new Intent(SendStickerActivity.this, ShowHistoryActivity.class);
+            startActivity(intent);
         });
     }
 

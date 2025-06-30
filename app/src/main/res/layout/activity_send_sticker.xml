@@ -12,7 +12,7 @@
         android:id="@+id/recipientInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Recipient Username"
+        android:hint="@string/recipient_username"
         android:inputType="text"
         android:minHeight="48dp"
         android:textSize="16sp"
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose a Sticker"
+        android:text="@string/choose_a_sticker"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginBottom="12dp"/>
@@ -41,7 +41,7 @@
             android:layout_height="72dp"
             android:src="@drawable/sticker_heart"
             android:layout_margin="8dp"
-            android:contentDescription="Heart Sticker" />
+            android:contentDescription="@string/heart_sticker" />
 
         <ImageView
             android:id="@+id/stickerStar"
@@ -49,7 +49,7 @@
             android:layout_height="72dp"
             android:src="@drawable/sticker_star"
             android:layout_margin="8dp"
-            android:contentDescription="Star Sticker" />
+            android:contentDescription="@string/star_sticker" />
 
         <ImageView
             android:id="@+id/stickerFire"
@@ -57,16 +57,25 @@
             android:layout_height="72dp"
             android:src="@drawable/sticker_fire"
             android:layout_margin="8dp"
-            android:contentDescription="Fire Sticker" />
+            android:contentDescription="@string/fire_sticker" />
     </LinearLayout>
 
     <Button
         android:id="@+id/sendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Send Sticker"
+        android:text="@string/send_sticker"
         android:minHeight="48dp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp" />
+
+    <Button
+        android:id="@+id/showHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:text="@string/show_history" />
 
 </LinearLayout>

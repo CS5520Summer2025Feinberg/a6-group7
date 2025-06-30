@@ -8,6 +8,15 @@
     <string name="showFahrenheit">Show in Fahrenheit</string>
 
     <string name="login">Login</string>
+    <string name="show_history">Show History</string>
+    <string name="send_sticker">Send Sticker</string>
+    <string name="choose_a_sticker">Choose a Sticker</string>
+    <string name="recipient_username">Recipient username</string>
+    <string name="fire_sticker">Fire Sticker</string>
+    <string name="heart_sticker">Heart Sticker</string>
+    <string name="star_sticker">Star Sticker</string>
+    <string name="timestamp">Timestamp</string>
+    <string name="from">From:</string>
 
     <string name="channel_id">sticker_channel_id</string>
     <string name="channel_name">Sticker Notifications</string>

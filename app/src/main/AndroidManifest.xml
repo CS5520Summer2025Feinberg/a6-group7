@@ -11,6 +11,9 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.A6Group7">
         <activity
+            android:name=".ShowHistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".AboutUsActivity"
             android:exported="false" />
         <activity
