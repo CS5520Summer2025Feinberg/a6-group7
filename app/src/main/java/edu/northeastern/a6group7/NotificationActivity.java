@@ -5,17 +5,13 @@ import android.content.SharedPreferences;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import android.content.pm.PackageManager; // for permissions. Crash error otherwise
-import androidx.core.content.ContextCompat; // for permissions. Crash error otherwise
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,20 +29,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import android.annotation.SuppressLint; // ADDED: Import for @SuppressLint
+
 public class NotificationActivity extends AppCompatActivity {
 
     private DatabaseReference receivedHistoryRef;
     private ChildEventListener childEventListener;
     private String currentUsername;
 
-    // Notification constants
     private static final String CHANNEL_ID = "sticker_notifications_channel";
     private static final String CHANNEL_NAME = "Sticker Notifications";
     private static final String CHANNEL_DESCRIPTION = "Notifications for new stickers received";
     private static int notificationID = 100;
-
-    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 101; // request code for permission
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +68,6 @@ public class NotificationActivity extends AppCompatActivity {
                 .child("stickersReceivedHistory");
 
         createNotificationChannel();
-
     }
 
     @Override
@@ -99,7 +92,7 @@ public class NotificationActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Log.e("NotificationActivity", "Firebase listener cancelled: " + error.getMessage());
-                    Toast.makeText(NotificationActivity.this, "Failed to load stickers: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(NotificationActivity.this, "Failed to load stickers.", Toast.LENGTH_LONG).show();
                 }
             };
             receivedHistoryRef.addChildEventListener(childEventListener);
@@ -113,20 +106,6 @@ public class NotificationActivity extends AppCompatActivity {
             receivedHistoryRef.removeEventListener(childEventListener);
         }
     }
-
-    // request permissions. Crash error otherwise
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Notifications permission granted!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Notifications permission denied. You may not receive sticker notifications.", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -145,14 +124,11 @@ public class NotificationActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("MissingPermission") // ADDED: This annotation suppresses the compile-time warning.
     private void showNotification(Sticker receivedSticker) {
-        // permissions check. Crash error otherwise
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                Log.w("NotificationActivity", "POST_NOTIFICATIONS permission not granted. Cannot show notification.");
-                return;
-            }
-        }
+        // WARNING: This code does NOT check for POST_NOTIFICATIONS permission at runtime.
+        // On Android 13+ devices, your app WILL CRASH if the user has not manually granted
+        // the Notifications permission in settings. This simplification is by your explicit request.
 
         notificationID++;
 
@@ -174,26 +150,24 @@ public class NotificationActivity extends AppCompatActivity {
         if (stickerDrawableResId == 0) {
             stickerDrawableResId = R.drawable.ic_launcher_foreground;
         }
+
         Bitmap stickerBitmap = BitmapFactory.decodeResource(getResources(), stickerDrawableResId);
 
         String channelId = getString(R.string.channel_id);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("New Sticker from " + receivedSticker.getSender() + "!")
-                .setContentText("You received a " + receivedSticker.getStickerId().replace("sticker_", "").replace("_", " ") + " sticker!")
+                .setContentTitle("New Sticker!")
+                .setContentText("You received a sticker from " + receivedSticker.getSender() + "!")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
         if (stickerBitmap != null) {
             builder.setLargeIcon(stickerBitmap);
-        }
-
-        if (stickerBitmap != null) {
             builder.setStyle(new NotificationCompat.BigPictureStyle()
                     .bigPicture(stickerBitmap)
-                    .setSummaryText("Tap to view your sticker history!"));
+                    .setSummaryText("Tap to view sticker!"));
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);

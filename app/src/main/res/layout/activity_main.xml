@@ -7,51 +7,62 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/getWeather"
-        android:layout_width="224dp"
-        android:layout_height="51dp"
-        android:layout_marginBottom="152dp"
-        android:text="@string/get_weather"
+    <TextView
+        android:id="@+id/groupNamesTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp" android:text="@string/groupNames"
+        android:textAlignment="center"
+        android:textColor="#070707"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewStickersButton" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread" /> 
+    
     <Button
         android:id="@+id/aboutUs"
         android:layout_width="224dp"
         android:layout_height="51dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/aboutUs"
+        android:layout_marginTop="12dp" android:text="@string/aboutUs"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/sendStickerButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.828" />
+        app:layout_constraintTop_toBottomOf="@id/groupNamesTxt"
+        app:layout_constraintBottom_toTopOf="@id/sendStickerButton" />
 
     <Button
         android:id="@+id/sendStickerButton"
         android:layout_width="224dp"
         android:layout_height="51dp"
+        android:layout_marginTop="12dp"
         android:text="Send A Sticker"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@id/viewStickersButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/aboutUs"
+        app:layout_constraintBottom_toTopOf="@id/viewStickersButton" />
 
     <Button
         android:id="@+id/viewStickersButton"
         android:layout_width="224dp"
         android:layout_height="51dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:text="View Stickers"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/sendStickerButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/sendStickerButton"
+        app:layout_constraintBottom_toTopOf="@id/getWeather" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/getWeather"
+        android:layout_width="224dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="32dp" android:text="@string/get_weather"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewStickersButton"
+        app:layout_constraintBottom_toBottomOf="parent" /> </androidx.constraintlayout.widget.ConstraintLayout>
